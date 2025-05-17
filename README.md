@@ -2,7 +2,7 @@
 
 PokéPull is a full-stack game I decided to make for fun since I am currently learning front-end development and have been getting back into Pokémon recently. This inspiration came from a Roblox game that I played called Sol's rng, and I decided to try to make this for fun.
 
-#Frameworks
+# Frameworks
 
 React, HTML, CSS, JavaScript
 
