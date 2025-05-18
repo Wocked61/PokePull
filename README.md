@@ -1,5 +1,5 @@
 # PokéPull
-![PokePull Logo](https://github.com/user-attachments/assets/9f931338-8c70-433b-b8ef-56c7565919d1)
+<img src="https://github.com/user-attachments/assets/9f931338-8c70-433b-b8ef-56c7565919d1" alt="PokePull Logo" width="200"/>
 
 PokéPull is a full-stack game I decided to make for fun since I am currently learning front-end development and have been getting back into Pokémon recently. This inspiration came from a Roblox game that I played called Sol's rng, and I decided to try to make this for fun.
 
