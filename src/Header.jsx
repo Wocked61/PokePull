@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
+import logo from './assets/PokePull_Logo.png';
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +28,8 @@ function Header() {
     <header className="navbar">
       <div className="logo">
         <Link to="/">
-          <img src="PokePull_Logo.png" alt="logo" />
-          <h1> PokéPull - {getPageTitle()} </h1>
+          <img src={logo} alt="logo" />
+          <h1> - {getPageTitle()} </h1>
         </Link>
       </div>
       <button
