@@ -1,0 +1,37 @@
+.footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: whitesmoke;
+    color: white;
+    z-index: 1000;
+}
+
+.footer-text {
+    color: #333;
+    font-size: 14px;
+    text-align: left;
+    margin: 0.5rem 0;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+
+  }
+
+.footer-Content{
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
