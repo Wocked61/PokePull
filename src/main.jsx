@@ -4,11 +4,10 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import App from './App.jsx';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
+import Home from './Home.jsx';
+import Pokedex from './Pokedex.jsx';
 import './index.css';
 
-
-const Home = () => <div>Home Page</div>;
-const Pokedex = () => <div>Pokédex Page</div>;
 
 function MainApp() {
   return (
