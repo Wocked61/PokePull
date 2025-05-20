@@ -1,10 +1,15 @@
 import React from 'react';
 import './Home.css';
-
+import backgroundImage from './assets/Wigglytuff.png';
 
 function Home() {
   return (
-    <div className="home-container">
+    <div className="home-container" style={{ 
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh'
+    }}>
       <h1>Welcome to PokéPull</h1>
       <p>This is the Home PokéPull app page where</p>
       <div className="placeholder-content">
