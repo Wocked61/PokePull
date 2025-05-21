@@ -1,6 +1,23 @@
+.pokedex-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .pokedex-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  position: relative;
+  z-index: 1;
+  color: white; /* Adjust text color as needed for visibility */
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f1faee;
+  color: #1d3557;
+  margin: 0;
+  padding: 0;
 }
