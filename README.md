@@ -30,3 +30,8 @@ easily accessible through a modern, free, open-source RESTful API.
 This full RESTful API is linked to an extensive database detailing everything about the Pokémon main game series.
 
 We've covered everything from Pokémon to Berry Flavors.
+
+## Not original work
+I am using public resources and do not claim any of the work of the art done; the only thing I have done is the coding and using my imagination to implement my vision
+I do not claim any of the art done, it is from other fans and Nintendo
+
