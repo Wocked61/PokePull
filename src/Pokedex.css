@@ -21,3 +21,41 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.box {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  width : 200px;
+  height: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button {
+  background-color: #457b9d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.button:hover {
+  background-color: #2a9d8f;
+}
+.button:active {
+  background-color: #264653;
+  transform: translateY(2px);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

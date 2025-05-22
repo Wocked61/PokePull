@@ -15,6 +15,14 @@ function Pokedex() {
       <div className="pokedex-container">
         <h1>Pokedex</h1>
         <p>Explore the world of Pokemon!</p>
+        <div className='box'>
+        <p></p>
+        </div>
+        <div className='button-container'>
+        <button className='button'>Previous</button>
+        <button className='button'>Next</button>
+        </div>
+
       </div>
     </div>
     </div>
