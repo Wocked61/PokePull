@@ -12,7 +12,7 @@ function App() {
     }}>
 
       <div className="App">
-        <div className='button-container'>
+        <div className='button-container1'>
           <button className='button'>pull</button>
         </div>
 

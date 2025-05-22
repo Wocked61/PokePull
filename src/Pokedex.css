@@ -5,13 +5,16 @@
 }
 
 .pokedex-container {
+  display: flex;
+  flex-direction: column;
   max-width: 1200px;
+  min-height: calc(100vh - 100px);
   margin: 0 auto;
   padding: 20px;
   text-align: center;
   position: relative;
   z-index: 1;
-  color: white; /* Adjust text color as needed for visibility */
+  color: white;
 }
 
 body {
@@ -57,5 +60,7 @@ body {
 .button-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  align-items: center;
+  width: 100%;
+  margin-top: auto;
 }
