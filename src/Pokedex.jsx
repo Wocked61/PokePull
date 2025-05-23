@@ -8,9 +8,15 @@ function Pokedex() {
 
   useEffect(() => {
     const fetchPokemon = async () => {
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
+      const response = await fetch('https://pokeapi.co/api/v2/pokedex/1/');
+      if (!response.ok) {
+        console.error('Failed to fetch Pokédex');
+        setLoading(false);
+        return;
+      }
       const data = await response.json();
-      setPokemon(data.results);
+      setPokemon(data.pokemon_entries);
+      console.log(data.pokemon_entries);
       setLoading(false);
     };
 
@@ -27,7 +33,6 @@ function Pokedex() {
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        width: '100%',
         minHeight: '100vh'
       }}>
       <div className="pokedex-container">
