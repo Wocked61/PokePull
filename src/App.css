@@ -11,6 +11,7 @@ body {
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  
 }
 
 .placeholder-content {
@@ -77,4 +78,5 @@ h2 {
   top: 120%;
   width: 100%;
   position: relative;
+  min-height: 74vh;
 }

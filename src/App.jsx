@@ -8,7 +8,7 @@ function App() {
       backgroundImage: `url(${backgroundImage})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      minHeight: '100vh'
+      minHeight: '74vh'
     }}>
 
       <div className="App">
