@@ -16,7 +16,7 @@ function Header() {
       case '/Pokedex':
         return 'Pokédex';
       case '/Collections':
-        return 'Collections';
+        return 'Collection';
       default:
         return 'Home';
     }
@@ -44,7 +44,7 @@ function Header() {
       <ul className={`menu ${menuOpen ? "open" : ""}`}>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/App">PokéPull</Link></li>
-        <li><Link to="/Collections">Collections</Link></li>
+        <li><Link to="/Collections">Collection</Link></li>
         <li><Link to="/Pokedex">Pokédex</Link></li>
       </ul>
     </header>
