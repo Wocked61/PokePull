@@ -42,6 +42,9 @@ I do not claim any of the art done, it is from other fans and Nintendo
 # Getting a Shiny
 ![image](https://github.com/user-attachments/assets/9e5885f1-e3ab-466e-ab75-670e3d8fb210)
 
+## Collection
+![image](https://github.com/user-attachments/assets/2da53c6e-36f7-4efc-b2b1-a153ae7c819e)
+
 ## Pokedex
 ![image](https://github.com/user-attachments/assets/3f227cf7-f1ff-4cbf-ab60-c11d8f97581c)
 
