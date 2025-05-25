@@ -88,9 +88,6 @@ function Pokedex() {
         width: '100%'
       }}>
         <div className="pokedex-container">
-          {/* <h1>Pokedex</h1>
-          <p>Explore the world of Pokemon!</p> */}
-          
           <div className="pokemon-grid">
             {pokemonDetails.map((pokemon) => (
               <div key={pokemon.id} className="pokemon-box">
