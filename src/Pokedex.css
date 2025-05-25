@@ -1,6 +1,6 @@
 .pokedex-page {
   position: relative;
-  min-height: 74vh;
+  min-height: 60vh;
   width: 100%;
 }
 
@@ -8,9 +8,8 @@
   display: flex;
   flex-direction: column;
   max-width: 1200px;
-  min-height: auto;
+  min-height: 60vh;
   margin: 0 auto;
-  padding: 20px;
   text-align: center;
   position: relative;
   z-index: 1;

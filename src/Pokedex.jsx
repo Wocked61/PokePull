@@ -77,9 +77,6 @@ function Pokedex() {
     }
   };
 
-  if (loading) {
-    return <div>Loading Pokédex...</div>;
-  }
 
   return (
     <div className="pokedex-page">
@@ -87,12 +84,12 @@ function Pokedex() {
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        minHeight: '74vh',
+        minHeight: '60vh',
         width: '100%'
       }}>
         <div className="pokedex-container">
-          <h1>Pokedex</h1>
-          <p>Explore the world of Pokemon!</p>
+          {/* <h1>Pokedex</h1>
+          <p>Explore the world of Pokemon!</p> */}
           
           <div className="pokemon-grid">
             {pokemonDetails.map((pokemon) => (
