@@ -87,7 +87,7 @@ function Pokedex() {
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        minHeight: '70vh',
+        minHeight: '74vh',
         width: '100%'
       }}>
         <div className="pokedex-container">
