@@ -27,6 +27,32 @@ function App() {
       }
     }
 
+    function savePokemonToCollection(pokemon, isShiny) {
+      const collectedPokemon = JSON.parse(localStorage.getItem('collectedPokemon')) || [];
+      
+      const pokemonEntry = {
+        id: pokemon.id,
+        name: pokemon.name,
+        sprite: isShiny ? pokemon.sprites.front_shiny : pokemon.sprites.front_default,
+        isShiny: isShiny,
+        dateCaught: new Date().toISOString(),
+        types: pokemon.types.map(type => type.type.name)
+      };
+
+      const existingIndex = collectedPokemon.findIndex(p => 
+        p.id === pokemon.id && p.isShiny === isShiny
+      );
+
+      if (existingIndex !== -1) {
+        collectedPokemon[existingIndex].count = (collectedPokemon[existingIndex].count || 1) + 1;
+      } else {
+        pokemonEntry.count = 1;
+        collectedPokemon.push(pokemonEntry);
+      }
+
+      localStorage.setItem('collectedPokemon', JSON.stringify(collectedPokemon));
+    }
+
     function pullPokemon() {
       const newRandomInt = getRandomIntInclusive(1, 1025);
       const Shiny = Math.random() < 0.01;
@@ -42,7 +68,12 @@ function App() {
       }
     }
 
-    // Fetch initial Pokemon data
+    useEffect(() => {
+      if (pokemonData) {
+        savePokemonToCollection(pokemonData, isShiny);
+      }
+    }, [pokemonData, isShiny]);
+
     useEffect(() => {
       fetchPokemonData(currentPokemonId);
     }, []);
@@ -70,7 +101,7 @@ function App() {
               />
               {pokemonData && (
                 <div className="pokemon-info">
-                  <h3>{pokemonData.name}</h3>
+                  <h3>{pokemonData.name} {isShiny && '✨'}</h3>
                   <p>#{pokemonData.id}</p>
                   <p>Type: {pokemonData.types.map(type => type.type.name).join(', ')}</p>
                 </div>
