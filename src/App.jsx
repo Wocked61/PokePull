@@ -1,12 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import backgroundImage from './assets/Box_Forest_background2.png';
+import yippeeSound from './assets/yippee.mp3';
 
 function App() {
     const [currentPokemonId, setCurrentPokemonId] = useState(() => getRandomIntInclusive(1, 1025));
     const [isShiny, setIsShiny] = useState(false);
     const [pokemonData, setPokemonData] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const [sound] = useState(() => new Audio(yippeeSound));
+
+    function playSound() {
+      sound.currentTime = 0;
+      sound.volume = 0.5;
+      
+
+      const playPromise = sound.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log("Sound played successfully");
+          })
+          .catch((error) => {
+            console.error("Sound play error:", error);
+          });
+      }
+    }
 
     function getRandomIntInclusive(min, max) {
       min = Math.ceil(min);
@@ -56,12 +77,13 @@ function App() {
     function pullPokemon() {
       const newRandomInt = getRandomIntInclusive(1, 1025);
       const Shiny = Math.random() < 0.01;
-      
+
       setCurrentPokemonId(newRandomInt);
       setIsShiny(Shiny);
       fetchPokemonData(newRandomInt);
       
       if (Shiny) {
+        playSound();
         console.log(`Shiny Pokémon pulled with ID: ${newRandomInt}`);
       } else {
         console.log(`Regular Pokémon pulled with ID: ${newRandomInt}`);
