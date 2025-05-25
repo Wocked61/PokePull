@@ -52,7 +52,7 @@ function App() {
       backgroundImage: `url(${backgroundImage})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      minHeight: '74vh'
+      minHeight: '77vh'
     }}>
 
       <div className="App">

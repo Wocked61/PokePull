@@ -11,7 +11,7 @@ function Home() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         width: '100%',
-        minHeight: '74vh'
+        minHeight: '77vh'
       }}>
       
       <div className="home-container">

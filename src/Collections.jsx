@@ -9,7 +9,7 @@ const Collections = () => {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       width: '100%',
-      minHeight: '76vh'
+      minHeight: '77vh'
     }}></div>
   );
 }
