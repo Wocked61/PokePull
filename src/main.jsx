@@ -6,6 +6,7 @@ import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 import Home from './Home.jsx';
 import Pokedex from './Pokedex.jsx';
+import Collections from './Collections.jsx';
 import './index.css';
 
 
@@ -17,6 +18,7 @@ function MainApp() {
         <Route path="/" element={<Home />} />
         <Route path="/App" element={<App />} />
         <Route path="/Pokedex" element={<Pokedex />} />
+        <Route path="/Collections" element={<Collections />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <Footer />

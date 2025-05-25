@@ -5,7 +5,13 @@ header {
     text-align: center;
 }
 
-
+.page-title {
+  color: 	#E63946;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 1.8rem;
+  margin: 0;
+}
 
 /* Header Styles */
 .navbar {

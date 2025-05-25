@@ -15,6 +15,8 @@ function Header() {
         return 'PokéPull';
       case '/Pokedex':
         return 'Pokédex';
+      case '/Collections':
+        return 'Collections';
       default:
         return 'Home';
     }
@@ -29,7 +31,7 @@ function Header() {
       <div className="logo">
         <Link to="/">
           <img src={logo} alt="logo" />
-          <h1> - {getPageTitle()} </h1>
+          <h1 className='page-title'> - {getPageTitle()} </h1>
         </Link>
       </div>
       <button
@@ -42,6 +44,7 @@ function Header() {
       <ul className={`menu ${menuOpen ? "open" : ""}`}>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/App">PokéPull</Link></li>
+        <li><Link to="/Collections">Collections</Link></li>
         <li><Link to="/Pokedex">Pokédex</Link></li>
       </ul>
     </header>
