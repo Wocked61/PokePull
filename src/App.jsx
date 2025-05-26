@@ -1,3 +1,19 @@
+// todo
+// add currency to the pull button
+// regular pokemon give 0.5
+// shiny pokemon give 100
+// can use currency to buy pulls
+// add consumable items that can increase shiny chance
+// add consumable items that can get cards
+// add a limit
+// base currency is 10
+// every 5 seconds you get 1 currency
+// upgrades to increase currency gain
+// search bar for pokedex
+// dropdown for pokemon types
+// dropdown for pokemon
+
+
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import backgroundImage from './assets/Box_Forest_background2.png';
