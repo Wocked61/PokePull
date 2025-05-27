@@ -24,6 +24,7 @@ function App() {
     const [isShiny, setIsShiny] = useState(false);
     const [pokemonData, setPokemonData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [cooldown, setCooldown] = useState(false);
 
     const [sound] = useState(() => new Audio(yippeeSound));
 
@@ -91,6 +92,10 @@ function App() {
     }
 
     function pullPokemon() {
+      if (cooldown) return; 
+
+      setCooldown(true);
+      
       const newRandomInt = getRandomIntInclusive(1, 1025);
       const Shiny = Math.random() < 0.01;
 
@@ -104,6 +109,11 @@ function App() {
       } else {
         console.log(`Regular Pokémon pulled with ID: ${newRandomInt}`);
       }
+      
+
+      setTimeout(() => {
+        setCooldown(false);
+      }, 500);
     }
 
     useEffect(() => {
@@ -148,8 +158,8 @@ function App() {
           )}
         </div>
         <div className='button-container1'>
-          <button className='button' onClick={pullPokemon} disabled={loading}>
-            {loading ? 'Pulling...' : 'pull'}
+          <button className='button' onClick={pullPokemon} disabled={loading || cooldown}>
+            {loading ? 'Pulling...' : cooldown ? 'Cooldown...' : 'pull'}
           </button>
         </div>
 
