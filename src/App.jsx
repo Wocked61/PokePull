@@ -17,6 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import backgroundImage from './assets/Box_Forest_background2.png';
+import pokeBall from './assets/pokeball.png';
 import yippeeSound from './assets/yippee.mp3';
 
 function App() {
@@ -25,8 +26,29 @@ function App() {
     const [pokemonData, setPokemonData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [cooldown, setCooldown] = useState(false);
+    const [pokeballs, setPokeballs] = useState(() => {
+      const saved = localStorage.getItem('pokeballs');
+      return saved ? parseFloat(saved) : 10;
+    });
 
     const [sound] = useState(() => new Audio(yippeeSound));
+
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setPokeballs(prevPokeballs => {
+          const newAmount = prevPokeballs + 1;
+          localStorage.setItem('pokeballs', newAmount.toString());
+          return newAmount;
+        });
+      }, 5000); // 5000 = 5 seconds
+
+      return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+      localStorage.setItem('pokeballs', pokeballs.toString());
+    }, [pokeballs]);
 
     function playSound() {
       sound.currentTime = 0;
@@ -92,9 +114,11 @@ function App() {
     }
 
     function pullPokemon() {
-      if (cooldown) return; 
+      if (cooldown || pokeballs < 1) return;
 
       setCooldown(true);
+      
+      setPokeballs(prevPokeballs => prevPokeballs - 1);
       
       const newRandomInt = getRandomIntInclusive(1, 1025);
       const Shiny = Math.random() < 0.01;
@@ -103,13 +127,14 @@ function App() {
       setIsShiny(Shiny);
       fetchPokemonData(newRandomInt);
       
+
       if (Shiny) {
         playSound();
-        console.log(`Shiny Pokémon pulled with ID: ${newRandomInt}`);
+        setPokeballs(prevPokeballs => prevPokeballs + 100); // 100 pokeballs for shiny
+        console.log(`Shiny Pokémon pulled with ID: ${newRandomInt} - Gained 100 pokeballs!`);
       } else {
         console.log(`Regular Pokémon pulled with ID: ${newRandomInt}`);
       }
-      
 
       setTimeout(() => {
         setCooldown(false);
@@ -135,6 +160,33 @@ function App() {
     }}>
 
       <div className="App">
+        {/* Currency display */}
+        <div className="currency-display" style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          background: 'rgba(0, 0, 0, 0.8)',
+          color: 'white',
+          padding: '10px 15px',
+          borderRadius: '10px',
+          fontSize: '18px',
+          fontWeight: 'bold',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <img 
+            src={pokeBall} 
+            alt="Pokeball" 
+            style={{
+              width: '20px',
+              height: '20px',
+              borderRadius: '50%'
+            }}
+          />
+          {pokeballs.toFixed(1)} Pokéballs
+        </div>
+
         <div className='box'>
           {loading ? (
             <div className='loading'>Loading...</div>
@@ -158,8 +210,35 @@ function App() {
           )}
         </div>
         <div className='button-container1'>
-          <button className='button' onClick={pullPokemon} disabled={loading || cooldown}>
-            {loading ? 'Pulling...' : cooldown ? 'Cooldown...' : 'pull'}
+          <button 
+            className='button' 
+            onClick={pullPokemon} 
+            disabled={loading || cooldown || pokeballs < 1}
+            style={{
+              opacity: pokeballs < 1 ? 0.5 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+          >
+            {loading ? 'Pulling...' : 
+             cooldown ? 'Cooldown...' : 
+             pokeballs < 1 ? 'Need Pokéballs!' : 
+             <>
+               Pull (1 
+               <img 
+                 src={pokeBall} 
+                 alt="Pokeball" 
+                 style={{
+                   width: '16px',
+                   height: '16px',
+                   borderRadius: '50%',
+                   marginLeft: '4px'
+                 }}
+               />
+               )
+             </>}
           </button>
         </div>
 
