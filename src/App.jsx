@@ -187,6 +187,7 @@ function App() {
     const uniquePokemon = [...new Set(collectedPokemon.map(p => p.id))].length;
     const shinyCount = collectedPokemon.filter(p => p.isShiny).length;
     const completionPercentage = ((uniquePokemon / totalPokemon) * 100).toFixed(1);
+    const shinyPercentage = ((shinyCount / totalPokemon) * 100).toFixed(1);
 
     function buyUltraBall() {
       if (pokeballs >= 200) {
@@ -277,6 +278,8 @@ function App() {
             <span className="stat-value">✨{shinyCount}</span>
           </div>
         </div>
+        
+        {/* Regular Progress Bar */}
         <div className="progress-bar-container">
           <div className="progress-bar">
             <div 
@@ -285,6 +288,17 @@ function App() {
             ></div>
           </div>
           <span className="progress-percentage">{completionPercentage}%</span>
+        </div>
+
+        {/* Shiny Progress Bar */}
+        <div className="progress-bar-container shiny-container">
+          <div className="progress-bar">
+            <div 
+              className="progress-fill-shiny"
+              style={{ width: `${shinyPercentage}%` }}
+            ></div>
+          </div>
+          <span className="progress-percentage shiny-text">{shinyPercentage}%</span>
         </div>
       </div>
 
