@@ -15,7 +15,7 @@ import pokeBall from './assets/pokeball.png';
 import yippeeSound from './assets/yippee.mp3';
 
 function App() {
-    const [currentPokemonId, setCurrentPokemonId] = useState(() => getRandomIntInclusive(1, 1025));
+    const [currentPokemonId, setCurrentPokemonId] = useState(null);
     const [isShiny, setIsShiny] = useState(false);
     const [pokemonData, setPokemonData] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -141,9 +141,6 @@ function App() {
       }
     }, [pokemonData, isShiny]);
 
-    useEffect(() => {
-      fetchPokemonData(currentPokemonId);
-    }, []);
 
   return (
     <div style={{ 
@@ -184,7 +181,7 @@ function App() {
         <div className='box'>
           {loading ? (
             <div className='loading'>Loading...</div>
-          ) : (
+          ) : pokemonData ? (
             <>
               <img className='pokemon-image'
                 src={isShiny 
@@ -193,14 +190,16 @@ function App() {
                 } 
                 alt={`${isShiny ? 'Shiny ' : ''}${pokemonData?.name || 'Pokemon'} ${currentPokemonId}`} 
               />
-              {pokemonData && (
-                <div className="pokemon-info">
-                  <h3>{pokemonData.name} {isShiny && '✨'}</h3>
-                  <p>#{pokemonData.id}</p>
-                  <p>Type: {pokemonData.types.map(type => type.type.name).join(', ')}</p>
-                </div>
-              )}
+              <div className="pokemon-info">
+                <h3>{pokemonData.name} {isShiny && '✨'}</h3>
+                <p>#{pokemonData.id}</p>
+                <p>Type: {pokemonData.types.map(type => type.type.name).join(', ')}</p>
+              </div>
             </>
+          ) : (
+            <div className="no-pokemon">
+              <p>Press the pull button to catch a Pokémon!</p>
+            </div>
           )}
         </div>
         <div className='button-container1'>
