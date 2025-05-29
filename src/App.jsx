@@ -15,6 +15,7 @@ import pokeBall from './assets/pokeball.png';
 import ultraBall from './assets/ultraball.png';
 import yippeeSound from './assets/yippee.mp3';
 import pokeballBounce from './assets/PokeballBounce.mp3';
+import ultraballBounce from './assets/ultraBallSound.mp3';
 
 function App() {
     const [currentPokemonId, setCurrentPokemonId] = useState(null);
@@ -36,6 +37,8 @@ function App() {
     });
 
     const [sound] = useState(() => new Audio(yippeeSound));
+    const [pullSound] = useState(() => new Audio(pokeballBounce));
+    const [ultraPullSound] = useState(() => new Audio(ultraballBounce));
 
     const pokeballsPerInterval = 1 + pokeballUpgrade;
     
@@ -81,6 +84,40 @@ function App() {
           })
           .catch((error) => {
             console.error("Sound play error:", error);
+          });
+      }
+    }
+
+    function playPullSound() {
+      pullSound.currentTime = 0;
+      pullSound.volume = 0.7;
+      
+      const playPromise = pullSound.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log("Pull sound played successfully");
+          })
+          .catch((error) => {
+            console.error("Pull sound play error:", error);
+          });
+      }
+    }
+
+    function playUltraPullSound() {
+      ultraPullSound.currentTime = 0;
+      ultraPullSound.volume = 0.7;
+      
+      const playPromise = ultraPullSound.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log("Ultra pull sound played successfully");
+          })
+          .catch((error) => {
+            console.error("Ultra pull sound play error:", error);
           });
       }
     }
@@ -151,6 +188,13 @@ function App() {
       if (cooldown || currency < cost) return;
 
       setCooldown(true);
+      
+      // Play appropriate pull sound
+      if (useUltraBall) {
+        playUltraPullSound();
+      } else {
+        playPullSound();
+      }
       
       if (useUltraBall) {
         setUltraBalls(prevUltraBalls => prevUltraBalls - 1);
