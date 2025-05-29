@@ -1,8 +1,6 @@
 // todo
 // add consumable items that can increase shiny chance
 // add consumable items that can get cards
-// add a limit
-// upgrades to increase currency gain
 // search bar for pokedex
 // dropdown for pokemon types
 // dropdown for pokemon
@@ -23,6 +21,7 @@ function App() {
     const [pokemonData, setPokemonData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [cooldown, setCooldown] = useState(false);
+    const [collectedPokemon, setCollectedPokemon] = useState([]);
     const [pokeballs, setPokeballs] = useState(() => {
       const saved = localStorage.getItem('pokeballs');
       return saved ? parseFloat(saved) : 10;
@@ -69,6 +68,21 @@ function App() {
     useEffect(() => {
       localStorage.setItem('pokeballUpgrade', pokeballUpgrade.toString());
     }, [pokeballUpgrade]);
+
+    useEffect(() => {
+      loadCollectedPokemon();
+    }, []);
+
+    const loadCollectedPokemon = () => {
+      try {
+        const saved = localStorage.getItem('collectedPokemon');
+        if (saved) {
+          setCollectedPokemon(JSON.parse(saved));
+        }
+      } catch (error) {
+        console.error('Error loading collected Pokémon:', error);
+      }
+    };
 
     function playSound() {
       sound.currentTime = 0;
@@ -165,7 +179,14 @@ function App() {
       }
 
       localStorage.setItem('collectedPokemon', JSON.stringify(collectedPokemon));
+      setCollectedPokemon(collectedPokemon); // Update state
     }
+
+    // Calculate collection stats
+    const totalPokemon = 1025;
+    const uniquePokemon = [...new Set(collectedPokemon.map(p => p.id))].length;
+    const shinyCount = collectedPokemon.filter(p => p.isShiny).length;
+    const completionPercentage = ((uniquePokemon / totalPokemon) * 100).toFixed(1);
 
     function buyUltraBall() {
       if (pokeballs >= 200) {
@@ -203,7 +224,7 @@ function App() {
       }
       
       const newRandomInt = getRandomIntInclusive(1, 1025);
-      const shinyChance = useUltraBall ? 0.05 : 0.01; // 5% vs 1%
+      const shinyChance = useUltraBall ? 0.20 : 0.01; // 5% vs 1%
       const Shiny = Math.random() < shinyChance;
 
       setCurrentPokemonId(newRandomInt);
@@ -236,6 +257,36 @@ function App() {
       className="app-background"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
+
+      {/* Collection Progress Display */}
+      <div className="collection-progress">
+        <div className="progress-header">
+          <h3>Collection Progress</h3>
+        </div>
+        <div className="progress-stats">
+          <div className="progress-stat">
+            <span className="stat-label">Unique Pokémon:</span>
+            <span className="stat-value">{uniquePokemon}/{totalPokemon}</span>
+          </div>
+          <div className="progress-stat">
+            <span className="stat-label">Completion:</span>
+            <span className="stat-value">{completionPercentage}%</span>
+          </div>
+          <div className="progress-stat">
+            <span className="stat-label">Shinies:</span>
+            <span className="stat-value">✨{shinyCount}</span>
+          </div>
+        </div>
+        <div className="progress-bar-container">
+          <div className="progress-bar">
+            <div 
+              className="progress-fill"
+              style={{ width: `${completionPercentage}%` }}
+            ></div>
+          </div>
+          <span className="progress-percentage">{completionPercentage}%</span>
+        </div>
+      </div>
 
       <div className="App">
         {/* Currency display */}
