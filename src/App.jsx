@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import backgroundImage from './assets/Box_Forest_background2.png';
 import pokeBall from './assets/pokeball.png';
+import ultraBall from './assets/ultraball.png';
 import yippeeSound from './assets/yippee.mp3';
 
 function App() {
@@ -23,6 +24,10 @@ function App() {
     const [pokeballs, setPokeballs] = useState(() => {
       const saved = localStorage.getItem('pokeballs');
       return saved ? parseFloat(saved) : 10;
+    });
+    const [ultraBalls, setUltraBalls] = useState(() => {
+      const saved = localStorage.getItem('ultraBalls');
+      return saved ? parseFloat(saved) : 0;
     });
 
     const [sound] = useState(() => new Audio(yippeeSound));
@@ -43,6 +48,10 @@ function App() {
     useEffect(() => {
       localStorage.setItem('pokeballs', pokeballs.toString());
     }, [pokeballs]);
+
+    useEffect(() => {
+      localStorage.setItem('ultraBalls', ultraBalls.toString());
+    }, [ultraBalls]);
 
     function playSound() {
       sound.currentTime = 0;
@@ -107,15 +116,30 @@ function App() {
       localStorage.setItem('collectedPokemon', JSON.stringify(collectedPokemon));
     }
 
-    function pullPokemon() {
-      if (cooldown || pokeballs < 1) return;
+    function buyUltraBall() {
+      if (pokeballs >= 200) {
+        setPokeballs(prevPokeballs => prevPokeballs - 200);
+        setUltraBalls(prevUltraBalls => prevUltraBalls + 1);
+      }
+    }
+
+    function pullPokemon(useUltraBall = false) {
+      const cost = useUltraBall ? 1 : 1;
+      const currency = useUltraBall ? ultraBalls : pokeballs;
+      
+      if (cooldown || currency < cost) return;
 
       setCooldown(true);
       
-      setPokeballs(prevPokeballs => prevPokeballs - 1);
+      if (useUltraBall) {
+        setUltraBalls(prevUltraBalls => prevUltraBalls - 1);
+      } else {
+        setPokeballs(prevPokeballs => prevPokeballs - 1);
+      }
       
       const newRandomInt = getRandomIntInclusive(1, 1025);
-      const Shiny = Math.random() < 0.01;
+      const shinyChance = useUltraBall ? 0.05 : 0.01; // 5% vs 1%
+      const Shiny = Math.random() < shinyChance;
 
       setCurrentPokemonId(newRandomInt);
       setIsShiny(Shiny);
@@ -143,39 +167,47 @@ function App() {
 
 
   return (
-    <div style={{ 
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '77vh'
-    }}>
+    <div 
+      className="app-background"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
 
       <div className="App">
         {/* Currency display */}
-        <div className="currency-display" style={{
-          position: 'absolute',
-          top: '20px',
-          right: '20px',
-          background: 'rgba(0, 0, 0, 0.8)',
-          color: 'white',
-          padding: '10px 15px',
-          borderRadius: '10px',
-          fontSize: '18px',
-          fontWeight: 'bold',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          <img 
-            src={pokeBall} 
-            alt="Pokeball" 
-            style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%'
-            }}
-          />
-          {pokeballs.toFixed(1)} Pokéballs
+        <div className="currency-display">
+          <div className="currency-item">
+            <img 
+              src={pokeBall} 
+              alt="Pokeball" 
+              className="currency-icon"
+            />
+            {pokeballs.toFixed(1)} Pokéballs
+          </div>
+          <div className="currency-item">
+            <img 
+              src={ultraBall} 
+              alt="Ultra Ball" 
+              className="currency-icon"
+            />
+            {ultraBalls.toFixed(1)} Ultra Balls
+          </div>
+        </div>
+
+        {/* Buy Ultra Ball button */}
+        <div className="buy-ultra-ball-container">
+          <button 
+            onClick={buyUltraBall}
+            disabled={pokeballs < 200}
+            className="buy-ultra-ball-btn"
+          >
+            Buy Ultra Ball (200 
+            <img 
+              src={pokeBall} 
+              alt="Pokeball" 
+              className="small-icon"
+            />
+            )
+          </button>
         </div>
 
         <div className='box'>
@@ -198,22 +230,16 @@ function App() {
             </>
           ) : (
             <div className="no-pokemon">
-              <p>Press the pull button to catch a Pokémon!</p>
+              <p>Press a pull button to catch a Pokémon!</p>
             </div>
           )}
         </div>
         <div className='button-container1'>
           <button 
-            className='button' 
-            onClick={pullPokemon} 
+            className='button pull-button regular' 
+            onClick={() => pullPokemon(false)} 
             disabled={loading || cooldown || pokeballs < 1}
-            style={{
-              opacity: pokeballs < 1 ? 0.5 : 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
+            style={{ opacity: pokeballs < 1 ? 0.5 : 1 }}
           >
             {loading ? 'Pulling...' : 
              cooldown ? 'Cooldown...' : 
@@ -223,14 +249,29 @@ function App() {
                <img 
                  src={pokeBall} 
                  alt="Pokeball" 
-                 style={{
-                   width: '16px',
-                   height: '16px',
-                   borderRadius: '50%',
-                   marginLeft: '4px'
-                 }}
+                 className="button-icon"
                />
-               )
+               ) - 1% Shiny
+             </>}
+          </button>
+          
+          <button 
+            className='button pull-button ultra' 
+            onClick={() => pullPokemon(true)} 
+            disabled={loading || cooldown || ultraBalls < 1}
+            style={{ opacity: ultraBalls < 1 ? 0.5 : 1 }}
+          >
+            {loading ? 'Pulling...' : 
+             cooldown ? 'Cooldown...' : 
+             ultraBalls < 1 ? 'Need Ultra Balls!' : 
+             <>
+               Ultra Pull (1 
+               <img 
+                 src={ultraBall} 
+                 alt="Ultra Ball" 
+                 className="button-icon"
+               />
+               ) - 5% Shiny
              </>}
           </button>
         </div>

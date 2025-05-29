@@ -128,3 +128,103 @@ h2 {
   font-size: 16px;
   color: #666;
 }
+
+.app-background {
+  background-size: cover;
+  background-position: center;
+  min-height: 77vh;
+}
+
+.currency-display {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.currency-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.currency-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.buy-ultra-ball-container {
+  position: absolute;
+  top: 120px;
+  right: 20px;
+}
+
+.buy-ultra-ball-btn {
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.buy-ultra-ball-btn:enabled {
+  background: rgba(138, 43, 226, 0.9);
+  cursor: pointer;
+}
+
+.buy-ultra-ball-btn:disabled {
+  background: rgba(100, 100, 100, 0.5);
+  cursor: not-allowed;
+}
+
+.small-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.button-container1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.pull-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pull-button.regular {
+  margin-right: 10px;
+}
+
+.pull-button.ultra:enabled {
+  background: linear-gradient(45deg, #8B2CF5, #4A90E2);
+}
+
+.pull-button.ultra:disabled {
+  background: #666;
+}
+
+.button-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-left: 4px;
+}
