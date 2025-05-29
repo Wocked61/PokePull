@@ -151,22 +151,19 @@ h2 {
   gap: 8px;
 }
 
-.currency-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.generation-rate {
+  font-size: 14px;
+  color: #90EE90;
+  font-style: italic;
 }
 
-.currency-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.buy-ultra-ball-container {
+.upgrade-container {
   position: absolute;
-  top: 120px;
+  top: 140px;
   right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .buy-ultra-ball-btn {
@@ -188,6 +185,39 @@ h2 {
 .buy-ultra-ball-btn:disabled {
   background: rgba(100, 100, 100, 0.5);
   cursor: not-allowed;
+}
+
+.upgrade-btn {
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.upgrade-btn:enabled {
+  background: rgba(34, 139, 34, 0.9);
+  cursor: pointer;
+}
+
+.upgrade-btn:disabled {
+  background: rgba(100, 100, 100, 0.5);
+  cursor: not-allowed;
+}
+
+.currency-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.currency-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 .small-icon {

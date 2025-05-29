@@ -14,6 +14,7 @@ import backgroundImage from './assets/Box_Forest_background2.png';
 import pokeBall from './assets/pokeball.png';
 import ultraBall from './assets/ultraball.png';
 import yippeeSound from './assets/yippee.mp3';
+import pokeballBounce from './assets/PokeballBounce.mp3';
 
 function App() {
     const [currentPokemonId, setCurrentPokemonId] = useState(null);
@@ -29,21 +30,30 @@ function App() {
       const saved = localStorage.getItem('ultraBalls');
       return saved ? parseFloat(saved) : 0;
     });
+    const [pokeballUpgrade, setPokeballUpgrade] = useState(() => {
+      const saved = localStorage.getItem('pokeballUpgrade');
+      return saved ? parseInt(saved) : 0; // 0 = base (1 per 5s), 1-4 = upgrade levels
+    });
 
     const [sound] = useState(() => new Audio(yippeeSound));
 
+    const pokeballsPerInterval = 1 + pokeballUpgrade;
+    
+    const upgradeCost = 100 + (pokeballUpgrade * 200);
+    
+    const isMaxUpgrade = pokeballUpgrade >= 4;
 
     useEffect(() => {
       const interval = setInterval(() => {
         setPokeballs(prevPokeballs => {
-          const newAmount = prevPokeballs + 1;
+          const newAmount = prevPokeballs + pokeballsPerInterval;
           localStorage.setItem('pokeballs', newAmount.toString());
           return newAmount;
         });
       }, 5000); // 5000 = 5 seconds
 
       return () => clearInterval(interval);
-    }, []);
+    }, [pokeballsPerInterval]);
 
     useEffect(() => {
       localStorage.setItem('pokeballs', pokeballs.toString());
@@ -52,6 +62,10 @@ function App() {
     useEffect(() => {
       localStorage.setItem('ultraBalls', ultraBalls.toString());
     }, [ultraBalls]);
+
+    useEffect(() => {
+      localStorage.setItem('pokeballUpgrade', pokeballUpgrade.toString());
+    }, [pokeballUpgrade]);
 
     function playSound() {
       sound.currentTime = 0;
@@ -123,6 +137,13 @@ function App() {
       }
     }
 
+    function buyPokeballUpgrade() {
+      if (pokeballs >= upgradeCost && !isMaxUpgrade) {
+        setPokeballs(prevPokeballs => prevPokeballs - upgradeCost);
+        setPokeballUpgrade(prevUpgrade => prevUpgrade + 1);
+      }
+    }
+
     function pullPokemon(useUltraBall = false) {
       const cost = useUltraBall ? 1 : 1;
       const currency = useUltraBall ? ultraBalls : pokeballs;
@@ -191,10 +212,13 @@ function App() {
             />
             {ultraBalls.toFixed(1)} Ultra Balls
           </div>
+          <div className="generation-rate">
+            rate : {pokeballsPerInterval} Pokéballs/5s
+          </div>
         </div>
 
-        {/* Buy Ultra Ball button */}
-        <div className="buy-ultra-ball-container">
+        {/* Upgrade buttons */}
+        <div className="upgrade-container">
           <button 
             onClick={buyUltraBall}
             disabled={pokeballs < 200}
@@ -207,6 +231,23 @@ function App() {
               className="small-icon"
             />
             )
+          </button>
+          
+          <button 
+            onClick={buyPokeballUpgrade}
+            disabled={pokeballs < upgradeCost || isMaxUpgrade}
+            className="upgrade-btn"
+          >
+            {isMaxUpgrade ? 'Max Upgrade!' : 
+             `Upgrade Rate (${upgradeCost} `}
+            {!isMaxUpgrade && (
+              <img 
+                src={pokeBall} 
+                alt="Pokeball" 
+                className="small-icon"
+              />
+            )}
+            {!isMaxUpgrade && ')'}
           </button>
         </div>
 
