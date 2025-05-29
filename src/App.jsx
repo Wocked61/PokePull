@@ -32,18 +32,35 @@ function App() {
     });
     const [pokeballUpgrade, setPokeballUpgrade] = useState(() => {
       const saved = localStorage.getItem('pokeballUpgrade');
-      return saved ? parseInt(saved) : 0; // 0 = base (1 per 5s), 1-4 = upgrade levels
+      return saved ? parseInt(saved) : 0;
     });
+    const [luckIncenseActive, setLuckIncenseActive] = useState(false);
+    const [luckIncenseTimeLeft, setLuckIncenseTimeLeft] = useState(0);
 
     const [sound] = useState(() => new Audio(yippeeSound));
     const [pullSound] = useState(() => new Audio(pokeballBounce));
     const [ultraPullSound] = useState(() => new Audio(ultraballBounce));
 
     const pokeballsPerInterval = 1 + pokeballUpgrade;
-    
     const upgradeCost = 100 + (pokeballUpgrade * 200);
-    
     const isMaxUpgrade = pokeballUpgrade >= 4;
+
+    // Luck Incense timer effect
+    useEffect(() => {
+      let timer;
+      if (luckIncenseActive && luckIncenseTimeLeft > 0) {
+        timer = setInterval(() => {
+          setLuckIncenseTimeLeft(prev => {
+            if (prev <= 1) {
+              setLuckIncenseActive(false);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
+      return () => clearInterval(timer);
+    }, [luckIncenseActive, luckIncenseTimeLeft]);
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -189,9 +206,17 @@ function App() {
     const completionPercentage = ((uniquePokemon / totalPokemon) * 100).toFixed(1);
     const shinyPercentage = ((shinyCount / totalPokemon) * 100).toFixed(1);
 
-    function buyUltraBall() {
-      if (pokeballs >= 200) {
+    function buyLuckIncense() {
+      if (pokeballs >= 200 && !luckIncenseActive) {
         setPokeballs(prevPokeballs => prevPokeballs - 200);
+        setLuckIncenseActive(true);
+        setLuckIncenseTimeLeft(60); // 60 seconds = 1 minute
+      }
+    }
+
+    function buyUltraBall() {
+      if (pokeballs >= 100) {
+        setPokeballs(prevPokeballs => prevPokeballs - 100);
         setUltraBalls(prevUltraBalls => prevUltraBalls + 1);
       }
     }
@@ -225,17 +250,18 @@ function App() {
       }
       
       const newRandomInt = getRandomIntInclusive(1, 1025);
-      const shinyChance = useUltraBall ? 0.20 : 0.01; // 5% vs 1%
+      // Apply luck incense bonus (double shiny rate)
+      let baseShinyChance = useUltraBall ? 0.05 : 0.01;
+      const shinyChance = luckIncenseActive ? baseShinyChance * 2 : baseShinyChance;
       const Shiny = Math.random() < shinyChance;
 
       setCurrentPokemonId(newRandomInt);
       setIsShiny(Shiny);
       fetchPokemonData(newRandomInt);
-      
 
       if (Shiny) {
         playSound();
-        setPokeballs(prevPokeballs => prevPokeballs + 100); // 100 pokeballs for shiny
+        setPokeballs(prevPokeballs => prevPokeballs + 100);
         console.log(`Shiny Pokémon pulled with ID: ${newRandomInt} - Gained 100 pokeballs!`);
       } else {
         console.log(`Regular Pokémon pulled with ID: ${newRandomInt}`);
@@ -252,183 +278,210 @@ function App() {
       }
     }, [pokemonData, isShiny]);
 
+    // Format time for display
+    const formatTime = (seconds) => {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
 
-  return (
-    <div 
-      className="app-background"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
+    return (
+      <div 
+        className="app-background"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
 
-      {/* Collection Progress Display */}
-      <div className="collection-progress">
-        <div className="progress-header">
-          <h3>Collection Progress</h3>
-        </div>
-        <div className="progress-stats">
-          <div className="progress-stat">
-            <span className="stat-label">Unique Pokémon:</span>
-            <span className="stat-value">{uniquePokemon}/{totalPokemon}</span>
+        {/* Collection Progress Display */}
+        <div className="collection-progress">
+          <div className="progress-header">
+            <h3>Collection Progress</h3>
           </div>
-          <div className="progress-stat">
-            <span className="stat-label">Completion:</span>
-            <span className="stat-value">{completionPercentage}%</span>
+          <div className="progress-stats">
+            <div className="progress-stat">
+              <span className="stat-label">Unique Pokémon:</span>
+              <span className="stat-value">{uniquePokemon}/{totalPokemon}</span>
+            </div>
+            <div className="progress-stat">
+              <span className="stat-label">Completion:</span>
+              <span className="stat-value">{completionPercentage}%</span>
+            </div>
+            <div className="progress-stat">
+              <span className="stat-label">Shinies:</span>
+              <span className="stat-value">✨{shinyCount}</span>
+            </div>
           </div>
-          <div className="progress-stat">
-            <span className="stat-label">Shinies:</span>
-            <span className="stat-value">✨{shinyCount}</span>
-          </div>
-        </div>
-        
-        {/* Regular Progress Bar */}
-        <div className="progress-bar-container">
-          <div className="progress-bar">
-            <div 
-              className="progress-fill"
-              style={{ width: `${completionPercentage}%` }}
-            ></div>
-          </div>
-          <span className="progress-percentage">{completionPercentage}%</span>
-        </div>
-
-        {/* Shiny Progress Bar */}
-        <div className="progress-bar-container shiny-container">
-          <div className="progress-bar">
-            <div 
-              className="progress-fill-shiny"
-              style={{ width: `${shinyPercentage}%` }}
-            ></div>
-          </div>
-          <span className="progress-percentage shiny-text">{shinyPercentage}%</span>
-        </div>
-      </div>
-
-      <div className="App">
-        {/* Currency display */}
-        <div className="currency-display">
-          <div className="currency-item">
-            <img 
-              src={pokeBall} 
-              alt="Pokeball" 
-              className="currency-icon"
-            />
-            {pokeballs.toFixed(1)} Pokéballs
-          </div>
-          <div className="currency-item">
-            <img 
-              src={ultraBall} 
-              alt="Ultra Ball" 
-              className="currency-icon"
-            />
-            {ultraBalls.toFixed(1)} Ultra Balls
-          </div>
-          <div className="generation-rate">
-            rate : {pokeballsPerInterval} Pokéballs/5s
-          </div>
-        </div>
-
-        {/* Upgrade buttons */}
-        <div className="upgrade-container">
-          <button 
-            onClick={buyUltraBall}
-            disabled={pokeballs < 200}
-            className="buy-ultra-ball-btn"
-          >
-            Buy Ultra Ball (200 
-            <img 
-              src={pokeBall} 
-              alt="Pokeball" 
-              className="small-icon"
-            />
-            )
-          </button>
           
-          <button 
-            onClick={buyPokeballUpgrade}
-            disabled={pokeballs < upgradeCost || isMaxUpgrade}
-            className="upgrade-btn"
-          >
-            {isMaxUpgrade ? 'Max Upgrade!' : 
-             `Upgrade Rate (${upgradeCost} `}
-            {!isMaxUpgrade && (
+          {/* Regular Progress Bar */}
+          <div className="progress-bar-container">
+            <div className="progress-bar">
+              <div 
+                className="progress-fill"
+                style={{ width: `${completionPercentage}%` }}
+              ></div>
+            </div>
+            <span className="progress-percentage">{completionPercentage}%</span>
+          </div>
+
+          {/* Shiny Progress Bar */}
+          <div className="progress-bar-container shiny-container">
+            <div className="progress-bar">
+              <div 
+                className="progress-fill-shiny"
+                style={{ width: `${shinyPercentage}%` }}
+              ></div>
+            </div>
+            <span className="progress-percentage shiny-text">{shinyPercentage}%</span>
+          </div>
+        </div>
+
+        <div className="App">
+          {/* Currency display */}
+          <div className="currency-display">
+            <div className="currency-item">
+              <img 
+                src={pokeBall} 
+                alt="Pokeball" 
+                className="currency-icon"
+              />
+              {pokeballs.toFixed(1)} Pokéballs
+            </div>
+            <div className="currency-item">
+              <img 
+                src={ultraBall} 
+                alt="Ultra Ball" 
+                className="currency-icon"
+              />
+              {ultraBalls.toFixed(1)} Ultra Balls
+            </div>
+            <div className="generation-rate">
+              rate : {pokeballsPerInterval} Pokéballs/5s
+            </div>
+            {luckIncenseActive && (
+              <div className="luck-incense-status">
+                🍀 Luck Active: {formatTime(luckIncenseTimeLeft)}
+              </div>
+            )}
+          </div>
+
+          {/* Upgrade buttons */}
+          <div className="upgrade-container">
+            <button 
+              onClick={buyUltraBall}
+              disabled={pokeballs < 100}
+              className="buy-ultra-ball-btn"
+            >
+              Buy Ultra Ball (100 
               <img 
                 src={pokeBall} 
                 alt="Pokeball" 
                 className="small-icon"
               />
-            )}
-            {!isMaxUpgrade && ')'}
-          </button>
-        </div>
+              )
+            </button>
+            
+            <button 
+              onClick={buyPokeballUpgrade}
+              disabled={pokeballs < upgradeCost || isMaxUpgrade}
+              className="upgrade-btn"
+            >
+              {isMaxUpgrade ? 'Max Upgrade!' : 
+               `Upgrade Rate (${upgradeCost} `}
+              {!isMaxUpgrade && (
+                <img 
+                  src={pokeBall} 
+                  alt="Pokeball" 
+                  className="small-icon"
+                />
+              )}
+              {!isMaxUpgrade && ')'}
+            </button>
 
-        <div className='box'>
-          {loading ? (
-            <div className='loading'>Loading...</div>
-          ) : pokemonData ? (
-            <>
-              <img className='pokemon-image'
-                src={isShiny 
-                  ? pokemonData?.sprites?.front_shiny || `https://pokeapi.co/media/sprites/pokemon/shiny/${currentPokemonId}.png`
-                  : pokemonData?.sprites?.front_default || `https://pokeapi.co/media/sprites/pokemon/${currentPokemonId}.png`
-                } 
-                alt={`${isShiny ? 'Shiny ' : ''}${pokemonData?.name || 'Pokemon'} ${currentPokemonId}`} 
-              />
-              <div className="pokemon-info">
-                <h3>{pokemonData.name} {isShiny && '✨'}</h3>
-                <p>#{pokemonData.id}</p>
-                <p>Type: {pokemonData.types.map(type => type.type.name).join(', ')}</p>
+            <button 
+              onClick={buyLuckIncense}
+              disabled={pokeballs < 200 || luckIncenseActive}
+              className="luck-incense-btn"
+            >
+              {luckIncenseActive ? 'Luck Active!' : 'Luck Incense (200 '}
+              {!luckIncenseActive && (
+                <img 
+                  src={pokeBall} 
+                  alt="Pokeball" 
+                  className="small-icon"
+                />
+              )}
+              {!luckIncenseActive && ')'}
+            </button>
+          </div>
+
+          <div className='box'>
+            {loading ? (
+              <div className='loading'>Loading...</div>
+            ) : pokemonData ? (
+              <>
+                <img className='pokemon-image'
+                  src={isShiny 
+                    ? pokemonData?.sprites?.front_shiny || `https://pokeapi.co/media/sprites/pokemon/shiny/${currentPokemonId}.png`
+                    : pokemonData?.sprites?.front_default || `https://pokeapi.co/media/sprites/pokemon/${currentPokemonId}.png`
+                  } 
+                  alt={`${isShiny ? 'Shiny ' : ''}${pokemonData?.name || 'Pokemon'} ${currentPokemonId}`} 
+                />
+                <div className="pokemon-info">
+                  <h3>{pokemonData.name} {isShiny && '✨'}</h3>
+                  <p>#{pokemonData.id}</p>
+                  <p>Type: {pokemonData.types.map(type => type.type.name).join(', ')}</p>
+                </div>
+              </>
+            ) : (
+              <div className="no-pokemon">
+                <p>Press a pull button to catch a Pokémon!</p>
               </div>
-            </>
-          ) : (
-            <div className="no-pokemon">
-              <p>Press a pull button to catch a Pokémon!</p>
-            </div>
-          )}
-        </div>
-        <div className='button-container1'>
-          <button 
-            className='button pull-button regular' 
-            onClick={() => pullPokemon(false)} 
-            disabled={loading || cooldown || pokeballs < 1}
-            style={{ opacity: pokeballs < 1 ? 0.5 : 1 }}
-          >
-            {loading ? 'Pulling...' : 
-             cooldown ? 'Cooldown...' : 
-             pokeballs < 1 ? 'Need Pokéballs!' : 
-             <>
-               Pull (1 
-               <img 
-                 src={pokeBall} 
-                 alt="Pokeball" 
-                 className="button-icon"
-               />
-               ) - 1% Shiny
-             </>}
-          </button>
-          
-          <button 
-            className='button pull-button ultra' 
-            onClick={() => pullPokemon(true)} 
-            disabled={loading || cooldown || ultraBalls < 1}
-            style={{ opacity: ultraBalls < 1 ? 0.5 : 1 }}
-          >
-            {loading ? 'Pulling...' : 
-             cooldown ? 'Cooldown...' : 
-             ultraBalls < 1 ? 'Need Ultra Balls!' : 
-             <>
-               Ultra Pull (1 
-               <img 
-                 src={ultraBall} 
-                 alt="Ultra Ball" 
-                 className="button-icon"
-               />
-               ) - 5% Shiny
-             </>}
-          </button>
-        </div>
+            )}
+          </div>
+          <div className='button-container1'>
+            <button 
+              className='button pull-button regular' 
+              onClick={() => pullPokemon(false)} 
+              disabled={loading || cooldown || pokeballs < 1}
+              style={{ opacity: pokeballs < 1 ? 0.5 : 1 }}
+            >
+              {loading ? 'Pulling...' : 
+               cooldown ? 'Cooldown...' : 
+               pokeballs < 1 ? 'Need Pokéballs!' : 
+               <>
+                 Pull (1 
+                 <img 
+                   src={pokeBall} 
+                   alt="Pokeball" 
+                   className="button-icon"
+                 />
+                 ) - {luckIncenseActive ? '2%' : '1%'} Shiny
+               </>}
+            </button>
+            
+            <button 
+              className='button pull-button ultra' 
+              onClick={() => pullPokemon(true)} 
+              disabled={loading || cooldown || ultraBalls < 1}
+              style={{ opacity: ultraBalls < 1 ? 0.5 : 1 }}
+            >
+              {loading ? 'Pulling...' : 
+               cooldown ? 'Cooldown...' : 
+               ultraBalls < 1 ? 'Need Ultra Balls!' : 
+               <>
+                 Ultra Pull (1 
+                 <img 
+                   src={ultraBall} 
+                   alt="Ultra Ball" 
+                   className="button-icon"
+                 />
+                 ) - {luckIncenseActive ? '10%' : '5%'} Shiny
+               </>}
+            </button>
+          </div>
 
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default App;

@@ -417,6 +417,52 @@ h2 {
   }
 }
 
+.luck-incense-status {
+  font-size: 14px;
+  color: #FFD700;
+  font-style: italic;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.6);
+  animation: luckGlow 2s ease-in-out infinite;
+}
+
+@keyframes luckGlow {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(255, 215, 0, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(255, 215, 0, 1), 0 0 12px rgba(124, 252, 0, 0.5);
+  }
+}
+
+.luck-incense-btn {
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.luck-incense-btn:enabled {
+  background: rgba(255, 215, 0, 0.9);
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+}
+
+.luck-incense-btn:disabled {
+  background: rgba(100, 100, 100, 0.5);
+  cursor: not-allowed;
+  color: white;
+}
+
+.luck-incense-btn:enabled:hover {
+  background: rgba(255, 215, 0, 1);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .collection-progress {
